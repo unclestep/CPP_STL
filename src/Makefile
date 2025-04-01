@@ -1,4 +1,4 @@
-FLAGS = -Wall -Werror -Wextra -std=c++20 -ggdb
+FLAGS = -Wall -Werror -Wextra -std=c++20 -ggdb -D_GLIBCXX_DEBUG
 LIBS = -lgtest -lgtest_main -pthread
 TEST_DIR = ./tests
 SRCS = $(filter-out $(TEST_DIR)/%, $(wildcard /*.cpp *.cpp))
