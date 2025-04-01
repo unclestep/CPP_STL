@@ -103,8 +103,17 @@ TEST(VectorTests, Test16){
 	std::vector<char> vorg;
 	EXPECT_EQ(vorg.max_size(), v.max_size());
 }
-TEST(VectorTests, Test17){
-	Vector<int> v {5, 12, 13, 14};
-	std::vector<int> vorg {1, 2, 3, 4};
+TEST(VectorTests, Test17) {
+	Vector<int> v{5, 12, 13, 14};
+	v.push_back(12);
+	std::vector<int> vorg{1, 2, 3, 4};
+	vorg.push_back(10);
 	EXPECT_EQ(vorg.capacity(), v.capacity());
 }
+TEST(VectorTests, Test18) {
+	Vector<int> v{5, 12, 13, 14};
+	v.push_back(12);
+	v.shrink_to_fit();
+	EXPECT_EQ(5, v.capacity());
+}
+

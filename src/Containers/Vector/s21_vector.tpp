@@ -98,7 +98,15 @@ Vector<T>::size_type Vector<T>::max_size(){
 template <typename T>
 void Vector<T>::shrink_to_fit() {
 	if(m_capacity > m_size){
-		m_size = m_capacity;
+		value_type *buff = new value_type[m_size];
+		for (size_t i = 0; i < m_size; ++i) {
+			buff[i] = std::move(arr[i]);
+		}
+		if(arr != NULL){
+			delete[] arr;
+		}
+		arr = buff;
+		m_capacity = m_size;
 	}
 }
 template <typename T>
