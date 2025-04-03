@@ -6,7 +6,6 @@
 #include <utility>
 #include <cstring>
 #include <math.h>
-
 template <class T>
 class Vector
 {
@@ -31,14 +30,15 @@ public:
 
     Vector(std::initializer_list<value_type> const &items);
 
-    Vector(const Vector &v) : m_size(v.m_size), m_capacity(v.m_capacity), arr(v.arr) {};
+    Vector(Vector &v);
 
     Vector(Vector &&v) : m_size(v.m_size), m_capacity(v.m_capacity), arr(v.arr)
     {
         v.arr = nullptr;
         v.m_size = 0;
     }
-	Vector& operator=(Vector &&v);
+
+	Vector& operator=(Vector &&v) noexcept;
     ~Vector() { delete[] arr; }
 
     size_type size();
@@ -61,9 +61,21 @@ public:
 
     void push_back(value_type v);
 
+	iterator insert(iterator pos, const_reference value);
+
 	size_type max_size();
 
-    iterator begin();
+	void reserve(size_type size);
+
+	void clear();
+
+	void erase(iterator pos);
+
+	iterator begin();
+
+	void pop_back();
+
+	void swap(Vector& other);
 
     iterator end();
 

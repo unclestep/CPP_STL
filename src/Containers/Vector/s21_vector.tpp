@@ -1,28 +1,29 @@
 #include "s21_vector.h"
 template <typename T>
 Vector<T>::Vector(std::initializer_list<value_type> const &items) : m_size(items.size()), m_capacity(0U), arr(nullptr){
-	reserve_more_capacity(m_size);
-    std::memcpy(arr, items.begin(), items.size() * sizeof(T));
+	arr = new value_type[items.size()];
+	int i = 0;
+	for (auto it = items.begin(); it != items.end(); it++)
+	{
+		arr[i] = *it;
+		i++;
+	}
+	m_size = items.size();
+	m_capacity = items.size();
 };
 
 template <typename T>
 void Vector<T>::reserve_more_capacity(size_type size) {
-    if(arr == NULL){
-        arr = new value_type[size];
+	if (size > m_capacity)
+	{
+		value_type *buff = new value_type[size];
+		for (size_t i = 0; i < m_size; ++i){
+			buff[i] = std::move(arr[i]);
+		}
+		delete[] arr;
+		arr = buff;
 		m_capacity = size;
-        return;
-    }
-    if(size > m_capacity){
-        value_type *buff = new value_type[size];
-        for (size_t i = 0; i < m_size; ++i) {
-            buff[i] = std::move(arr[i]);
-        }
-        if(arr != NULL){
-            delete[] arr;
-        }
-        arr = buff;
-        m_capacity = size;
-    }
+	}
 }
 
 template <typename T>
@@ -55,7 +56,7 @@ Vector<T>::reference Vector<T>::at(size_type pos)
 }
 
 template <typename T>
-Vector<T>& Vector<T>::operator=(Vector<T> &&v){
+Vector<T>& Vector<T>::operator=(Vector<T> &&v) noexcept {
 	if(this != &v){
 		arr = v.arr;
 		m_size = v.m_size;
@@ -70,7 +71,7 @@ Vector<T>& Vector<T>::operator=(Vector<T> &&v){
 
 template <typename T>
 Vector<T>::reference Vector<T>::operator[](size_type pos){
-	return arr[pos];
+	return arr[(int)pos];
 }
 
 template <typename T>
@@ -105,7 +106,7 @@ void Vector<T>::shrink_to_fit() {
 		if(arr != NULL){
 			delete[] arr;
 		}
-		arr = buff;
+		arr = buff; 
 		m_capacity = m_size;
 	}
 }
@@ -113,3 +114,74 @@ template <typename T>
 Vector<T>::size_type Vector<T>::capacity(){
 	return m_capacity;
 }
+
+template <typename T>
+void Vector<T>::reserve(size_type size){
+	reserve_more_capacity(size);
+}
+
+template <typename T>
+void Vector<T>::clear(){
+	m_size = 0;
+	delete[] arr;
+	arr = NULL;
+	buffer = NULL;
+}
+template <typename T>
+void Vector<T>::erase(iterator pos){
+	for(iterator i = pos; i < end()-1; i++){
+		*i = *(i + 1);
+	}
+	m_size = m_size - 1;
+	shrink_to_fit();
+}
+
+template <typename T>
+Vector<T>::iterator Vector<T>::insert(iterator pos, const_reference value){
+	size_type index = pos - begin();
+
+	reserve(m_size + 1);
+
+	pos = index + begin();
+
+	for(auto i = end(); i >= pos; --i){
+		*(i+1) = *(i);
+	}
+	*pos = value;
+	m_size = m_size + 1;
+	return pos;
+};
+
+template <typename T>
+void Vector<T>::pop_back(){
+	arr[m_size-1] = 0;
+	reserve_more_capacity(m_size-1);
+	m_size = m_size - 1;
+}
+
+template <typename T>
+void Vector<T>::swap(Vector& other){
+	auto tmp_arr = other.arr;
+	auto tmp_msize = other.m_size;
+	auto tmp_mcapacity = other.m_capacity;
+
+	other.arr = this->arr;
+	other.m_size = this->m_size;
+	other.m_capacity = this->m_capacity;
+
+	this->arr = tmp_arr;
+	this->m_size = tmp_msize;
+	this->m_capacity = tmp_mcapacity;
+}
+
+template <typename T>
+Vector<T>::Vector(Vector &v) : m_size(v.m_size), m_capacity(v.m_capacity){
+	arr = new value_type(v.m_size);
+
+	for(auto it = v.begin(), it1 = begin(); it < v.end(); it++, it1++){
+		*it1 = *it;
+	}
+	m_size = v.m_size;
+	m_capacity = v.m_capacity;
+
+};

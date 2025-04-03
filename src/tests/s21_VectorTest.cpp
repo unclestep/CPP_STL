@@ -33,9 +33,10 @@ TEST(VectorTests, Test3){
 
 TEST(VectorTests, Test4){
     Vector<double> v = {1.0, 2.0, 3.0, 4.0, 5.0};
+	std::vector<double> v1 = {1.0, 2.0, 3.0, 4.0, 5.0};
     v.push_back(6.0);
-    v.at(2);
-	EXPECT_EQ(v.at(2), 3.0);
+	v1.push_back(6.0);
+	EXPECT_EQ(v.at(2), v1.at(2));
 }
 
 TEST(VectorTests, Test5){
@@ -112,8 +113,66 @@ TEST(VectorTests, Test17) {
 }
 TEST(VectorTests, Test18) {
 	Vector<int> v{5, 12, 13, 14};
+	std::vector<int> v1{5, 12, 13, 14};
 	v.push_back(12);
+	v1.push_back(12);
 	v.shrink_to_fit();
-	EXPECT_EQ(5, v.capacity());
+	v1.shrink_to_fit();
+	EXPECT_EQ(v1.capacity(), v.capacity());
 }
+
+TEST(VectorTests, Test19) {
+	std::vector<int> v1{5, 12, 13, 14};
+	Vector<int> v {5, 12, 13, 14};
+	v1.reserve(2);
+	v.reserve(2);
+	EXPECT_EQ(v1.capacity(), v.capacity());
+}
+TEST(VectorTests, Test20) {
+	std::vector<int> v1{5, 12, 13, 14};
+	Vector<int> v {5, 12, 13, 14};
+	v1.reserve(17);
+	v.reserve(17);
+	EXPECT_EQ(v1.capacity(), v.capacity());
+}
+
+TEST(VectorTests, Test21) {
+	std::vector<int> v1{5, 12, 13, 14};
+	Vector<int> v {5, 12, 13, 14};
+	v1.erase(v1.begin());
+	v.erase(v.begin());
+
+	EXPECT_EQ(v1.size(), v.size());
+	EXPECT_EQ(v[0], v1[0]);
+}
+
+TEST(VectorTests, Test22) {
+	Vector<int> v {5, 12, 13, 14};
+
+	v.insert(v.begin(), 7);
+
+	EXPECT_EQ(*(v.begin()), 7);
+}
+
+TEST(VectorTests, Test23) {
+	Vector<int> v {5, 12, 13, 14};
+
+	v.pop_back();
+
+	EXPECT_EQ(*(v.end()-1), 13);
+}
+
+TEST(VectorTests, Test24) {
+	Vector<int> v1 {5, 12, 13, 14};
+	Vector<int> v2 {17, 2};
+	v1.swap(v2);
+
+	EXPECT_EQ(5, *(v2.begin()));
+	EXPECT_EQ(17, *(v1.begin()));
+}
+
+
+
+
+
 
