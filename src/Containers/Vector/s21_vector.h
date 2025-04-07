@@ -6,6 +6,7 @@
 #include <utility>
 #include <cstring>
 #include <math.h>
+namespace s21{
 template <class T>
 class Vector
 {
@@ -30,7 +31,7 @@ public:
 
     Vector(std::initializer_list<value_type> const &items);
 
-    Vector(Vector &v);
+    Vector(const Vector &v);
 
     Vector(Vector &&v) : m_size(v.m_size), m_capacity(v.m_capacity), arr(v.arr)
     {
@@ -72,13 +73,16 @@ public:
 	void erase(iterator pos);
 
 	iterator begin();
+	iterator begin() const;
 
 	void pop_back();
 
 	void swap(Vector& other);
 
     iterator end();
+	iterator end() const;
 
 };
+}
 
 #endif

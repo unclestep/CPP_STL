@@ -1,4 +1,6 @@
 #include "s21_vector.h"
+namespace s21{
+
 template <typename T>
 Vector<T>::Vector(std::initializer_list<value_type> const &items) : m_size(items.size()), m_capacity(0U), arr(nullptr){
 	arr = new value_type[items.size()];
@@ -31,8 +33,18 @@ Vector<T>::iterator Vector<T>::begin(){
     return arr;
 }
 template <typename T>
+Vector<T>::iterator Vector<T>::begin() const{
+	return arr;
+}
+
+template <typename T>
 Vector<T>::iterator Vector<T>::end(){
     return arr + m_size;
+}
+
+template <typename T>
+Vector<T>::iterator Vector<T>::end() const{
+	return arr + m_size;
 }
 
 template <typename T>
@@ -52,12 +64,16 @@ Vector<T>::size_type Vector<T>::size(){
 template <typename T>
 Vector<T>::reference Vector<T>::at(size_type pos)
 {
+	if (pos >= m_size) {
+		throw std::out_of_range("Vector index out of range");
+	}
     return arr[pos];
 }
 
 template <typename T>
 Vector<T>& Vector<T>::operator=(Vector<T> &&v) noexcept {
 	if(this != &v){
+		delete[] arr;
 		arr = v.arr;
 		m_size = v.m_size;
 		m_capacity = v.m_capacity;
@@ -123,9 +139,6 @@ void Vector<T>::reserve(size_type size){
 template <typename T>
 void Vector<T>::clear(){
 	m_size = 0;
-	delete[] arr;
-	arr = NULL;
-	buffer = NULL;
 }
 template <typename T>
 void Vector<T>::erase(iterator pos){
@@ -133,7 +146,6 @@ void Vector<T>::erase(iterator pos){
 		*i = *(i + 1);
 	}
 	m_size = m_size - 1;
-	shrink_to_fit();
 }
 
 template <typename T>
@@ -154,9 +166,9 @@ Vector<T>::iterator Vector<T>::insert(iterator pos, const_reference value){
 
 template <typename T>
 void Vector<T>::pop_back(){
-	arr[m_size-1] = 0;
-	reserve_more_capacity(m_size-1);
-	m_size = m_size - 1;
+	if (m_size > 0) {
+		--m_size;
+	}
 }
 
 template <typename T>
@@ -175,8 +187,8 @@ void Vector<T>::swap(Vector& other){
 }
 
 template <typename T>
-Vector<T>::Vector(Vector &v) : m_size(v.m_size), m_capacity(v.m_capacity){
-	arr = new value_type(v.m_size);
+Vector<T>::Vector(const Vector &v) : m_size(v.m_size), m_capacity(v.m_capacity){
+	arr = new value_type[v.m_size];
 
 	for(auto it = v.begin(), it1 = begin(); it < v.end(); it++, it1++){
 		*it1 = *it;
@@ -184,4 +196,6 @@ Vector<T>::Vector(Vector &v) : m_size(v.m_size), m_capacity(v.m_capacity){
 	m_size = v.m_size;
 	m_capacity = v.m_capacity;
 
+
 };
+}

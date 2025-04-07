@@ -2,6 +2,8 @@
 // Created by rasko on 31.03.2025.
 //
 #include "s21_test.h"
+namespace s21{
+
 
 TEST(VectorTests, Test1){
     Vector<int> v = {1, 2, 3, 4, 5};
@@ -171,7 +173,22 @@ TEST(VectorTests, Test24) {
 	EXPECT_EQ(17, *(v1.begin()));
 }
 
+TEST(VectorTests, Test25) {
+	Vector<int> v1 {5, 12, 13, 14};
+	Vector<int> v2;
+	v2 = std::move(v1);
 
+	EXPECT_EQ(14, v2.back());
+}
+
+TEST(VectorTests, Test26) {
+	Vector<int> v1 {5, 12, 13, 14};
+	Vector<int> v2(v1);
+
+	EXPECT_EQ(14, v2.back());
+	EXPECT_EQ(14, v1.back());
+}
+}
 
 
 
