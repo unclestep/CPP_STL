@@ -4,7 +4,6 @@
 #include "s21_stack.h"
 
 namespace s21{
-
 	template<class T, class Container>
 	Stack<T, Container>::Stack() : vector() {}
 
@@ -15,7 +14,7 @@ namespace s21{
 	Stack<T, Container>::Stack(std::initializer_list<value_type> const &items) : vector(items){}
 
 	template<class T, class Container>
-	Stack<T, Container>::const_reference Stack<T, Container>::top() {
+	Stack<T, Container>::const_reference Stack<T, Container>::top(){
 		return *(vector.end() - 1);
 	}
 	template<class T, class Container>
