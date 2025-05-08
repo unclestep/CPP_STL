@@ -23,7 +23,7 @@ namespace s21{
 		Stack(const Stack &s);
 		Stack(Stack &&s);
 		~Stack();
-		Stack& operator=(Stack &&s);
+		Stack& operator=(Stack &&s) noexcept;
 
 		const_reference top();
 

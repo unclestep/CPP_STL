@@ -53,5 +53,36 @@ namespace s21{
 		EXPECT_EQ(s1.top(), 6);
 		EXPECT_EQ(s2.top(), 6);
 	}
+	TEST(StackTests, Test11){
+		Stack<int> s1 {1, 2, 3, 4, 5, 6};
+		Stack<int> s2(s1);
+
+		EXPECT_EQ(s1.top(), s2.top());
+	}
+	TEST(StackTests, Test12){
+		Stack<int> s1 {1, 2, 3, 4, 5, 6};
+		Stack<int> s2 = s1;
+		EXPECT_EQ(s1.top(), s2.top());
+    }
+	TEST(StackTests, Test13){
+		Stack<int> s1 {1, 2, 3, 4, 5, 6};
+		Stack<int> s2 = std::move(s1);
+		EXPECT_EQ(s2.top(), 6);
+		EXPECT_EQ(s1.empty(), true);
+	}
+	TEST(StackTests, Test14){
+		Stack<int> s1 {1, 2, 3, 4, 5, 6};
+        Stack<int> s2 = {7, 8, 9, 10};
+
+		s1.swap(s2);
+		EXPECT_EQ(s1.top(), 10);
+		EXPECT_EQ(s2.top(), 6);
+	}
+	TEST(StackTests, Test15){
+		Stack<int> s1 {1, 2, 3, 4, 5, 6};
+		Stack<int> s2;
+        s2 = std::move(s1);
+		EXPECT_EQ(s2.top(), 6);
+	}
 
 }

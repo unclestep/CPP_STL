@@ -4,4 +4,6 @@
 #include "Vector/s21_vector.tpp"
 #include "Stack/s21_stack.h"
 #include "Stack/s21_stack.tpp"
+#include "List/s21_list.h"
+#include "List/s21_list.tpp"
 #endif

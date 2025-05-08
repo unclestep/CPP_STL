@@ -38,9 +38,17 @@ namespace s21{
 		vector.swap(other.vector);
 	}
 	template<class T, class Container>
-	Stack<T, Container>::Stack(const Stack &s) : vector(s.vector){
+	Stack<T, Container>::Stack(const Stack &s) : vector(s.vector){}
 
+	template<class T, class Container>
+	Stack<T, Container>::Stack(Stack &&s) : vector(std::move(s.vector)){}
+
+    template<class T, class Container>
+	Stack<T, Container>& Stack<T, Container>::operator=(Stack<T, Container>&& s) noexcept {
+    	vector = std::move(s.vector);
+    	return *this;
 	}
+
 }
 
 
