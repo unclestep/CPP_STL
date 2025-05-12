@@ -201,4 +201,66 @@ namespace s21{
         EXPECT_EQ(newList1.back(), 8);
         
     }
+    TEST(ListTests, Test22) {
+        List<int> list1 = {5, 9, 1, 3, 3};
+        List<int> list2 = {8, 7, 2, 3, 4, 4};
+       
+        list1.sort();
+        list2.sort();
+        list1.merge(list2);
+
+
+        EXPECT_EQ(list1.front(), 1);
+        EXPECT_EQ(list1.back(), 9);
+    }
+    TEST(ListTests, Test23) {
+        List<int> list1 = {1, 2, 3, 4, 5, 6, 7, 8, 9};
+
+        list1.reverse();
+
+        EXPECT_EQ(list1.front(), 9);
+        EXPECT_EQ(list1.back(), 1);
+    }
+    TEST(ListTests, Test24) {
+        List<int> list1 = {1, 2, 2, 2, 2, 2, 3};
+
+        list1.unique();
+
+        EXPECT_EQ(list1.front(), 1);
+        EXPECT_EQ(list1.back(), 3);
+    }
+    TEST(ListTests, Test25) {
+        List<int> list1 = {4, 5, 6};
+        List<int> list2 = {1, 2};
+
+        list1.splice(list1.cbegin(), list2);
+
+        for(auto it = list1.begin(); it != nullptr; ++it){
+            std::cout << "It == " << *it << "\n";
+        }
+    }
+    TEST(ListTests, Test26) {
+        List<int> list1 = {4, 5, 6};
+        List<int> list2 = {1, 2};
+
+        list1.splice(list1.cend(), list2);
+
+        for(auto it = list1.begin(); it != nullptr; ++it){
+            std::cout << "It == " << *it << "\n";
+        }
+        
+    }
+    TEST(ListTests, Test27) {
+        List<int> list1 = {4, 5, 6};
+        List<int> list2 = {1, 2};
+
+        auto cit = list1.cbegin();
+        ++cit;
+        list1.splice(cit, list2);
+
+        for(auto it = list1.begin(); it != nullptr; ++it){
+            std::cout << "It == " << *it << "\n";
+        }
+        
+    }
 }

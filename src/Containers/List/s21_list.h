@@ -84,7 +84,7 @@ namespace s21 {
                 current = current->prev;
                 return *this;
             }
-            Node* getNode() const { 
+            const Node* getNode() const { 
                 return current; 
             }
         };
@@ -122,7 +122,7 @@ namespace s21 {
         }
         List(const List &l) : head(nullptr), tail(nullptr){
             for(auto it = l.cbegin(); it != l.cend(); ++it){
-                Node* tmp = it.getNode();
+                const Node* tmp = it.getNode();
                 push_back(tmp->data);
             }
         }
@@ -326,7 +326,76 @@ namespace s21 {
                 last = curr;
             }while(swapped);
         }
-         
+        void merge(List& other){
+            if(head == nullptr && other.head == nullptr) return;
+            tail->next = other.head;
+            other.tail->prev = tail;
+            tail = other.tail;
+            other.tail = nullptr;
+            other.head = nullptr;
+            sort();
+        }
+        void reverse(){
+            Node* curr = head;
+            while(curr != nullptr){
+                Node* tmp = curr->next;
+                
+                curr->next = curr->prev;
+                curr->prev = tmp;
+
+                curr = curr->prev;
+            }
+            Node* tmp = head;
+            
+            head = tail;
+            tail = tmp;
+        }
+        void unique(){
+            if(head == nullptr){
+                return;
+            }
+            Node* curr = head;
+            while(curr != nullptr && curr->next != nullptr){
+                Node* tmp = curr->next;
+                if(curr->data == tmp->data){
+                    curr->prev->next = curr->next;
+                    curr->next->prev = curr->prev;
+                    delete curr;
+                    curr = tmp;
+                    continue;
+                }else{
+                    curr = curr->next;
+                }
+                 
+            }
+        }
+        void splice(const_iterator pos, List& other) {
+            if (other.empty()) return;
+
+            const Node* pos_node = pos.getNode();
+
+            if (pos_node == head) {
+                other.tail->next = head;
+                if (head) head->prev = other.tail;
+                head = other.head;
+            } 
+            else if (pos_node == tail) {
+                tail->next = other.head;
+                other.head->prev = tail;
+                tail = other.tail;
+            }
+            else {
+                Node* curr = const_cast<Node*>(pos_node);  
+                Node* prev_node = curr->prev;
+
+                prev_node->next = other.head;
+                other.head->prev = prev_node;
+                other.tail->next = curr;
+                curr->prev = other.tail;
+            }
+
+            other.head = other.tail = nullptr;
+        }
     private:
         Node* head;
         Node* tail;
@@ -335,10 +404,3 @@ namespace s21 {
 }  // namespace s21
 
 #endif // S21_LIST
-
-
-
-
-
-
-
