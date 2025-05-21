@@ -98,7 +98,9 @@ namespace s21 {
         using const_iterator = ListConstIterator;
 
         List() : head(nullptr), tail(nullptr) {}
-        ~List() {};
+        ~List() {
+            clear();
+        };
         List(std::initializer_list<value_type> const &items){
             for(auto it = items.begin(); it != items.end(); it++){
                 if(it == items.begin() && it == NULL){
@@ -121,7 +123,7 @@ namespace s21 {
             }
         }
         List(const List &l) : head(nullptr), tail(nullptr){
-            for(auto it = l.cbegin(); it != l.cend(); ++it){
+            for(auto it = l.cbegin(); it != nullptr; ++it){
                 const Node* tmp = it.getNode();
                 push_back(tmp->data);
             }
