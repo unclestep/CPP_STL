@@ -49,6 +49,10 @@ namespace s21{
             void swap(Queue& other){
                 list.swap(other.list);
             }
+            template<typename... Args>
+            void insert_many_back(Args&&... args){
+                (push(std::forward<Args>(args)), ...);
+            }
     };
 }
 #endif 

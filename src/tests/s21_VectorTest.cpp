@@ -188,6 +188,89 @@ TEST(VectorTests, Test26) {
 	EXPECT_EQ(14, v2.back());
 	EXPECT_EQ(14, v1.back());
 }
+TEST(VectorTests, Test27) {
+    s21::Vector<int> v;
+    v.insert_many_back(42);
+    ASSERT_EQ(v.size(), 1);
+    EXPECT_EQ(v[0], 42);
+}
+
+TEST(VectorTests, Test28) {
+    s21::Vector<int> v;
+    v.insert_many_back(1, 2, 3, 4, 5);
+    ASSERT_EQ(v.size(), 5);
+    EXPECT_EQ(v[0], 1);
+    EXPECT_EQ(v[1], 2);
+    EXPECT_EQ(v[2], 3);
+    EXPECT_EQ(v[3], 4);
+    EXPECT_EQ(v[4], 5);
+}
+
+TEST(VectorTests, Test29) {
+    s21::Vector<double> v;
+    v.insert_many_back(1, 2.5f, 3.14);
+    ASSERT_EQ(v.size(), 3);
+    EXPECT_DOUBLE_EQ(v[0], 1.0);
+    EXPECT_DOUBLE_EQ(v[1], 2.5);
+    EXPECT_DOUBLE_EQ(v[2], 3.14);
+}
+
+TEST(VectorTests, Test30) {
+    s21::Vector<int> v;
+    v.insert_many_back();
+    EXPECT_EQ(v.size(), 0);
+}
+TEST(VectorTests, Test31) {
+    Vector<int> vec = {3, 4, 5};
+    auto it = vec.begin();
+    vec.insert_many(it, 1, 2);
+
+    ASSERT_EQ(vec.size(), 5u);
+    EXPECT_EQ(vec[0], 1);
+    EXPECT_EQ(vec[1], 2);
+    EXPECT_EQ(vec[2], 3);
+    EXPECT_EQ(vec[3], 4);
+    EXPECT_EQ(vec[4], 5);
+}
+
+TEST(VectorTests, Test32) {
+    Vector<int> vec = {1, 2, 6, 7};
+    auto it = vec.begin() + 2;
+    vec.insert_many(it, 3, 4, 5);
+
+    ASSERT_EQ(vec.size(), 7u);
+    EXPECT_EQ(vec[0], 1);
+    EXPECT_EQ(vec[1], 2);
+    EXPECT_EQ(vec[2], 3);
+    EXPECT_EQ(vec[3], 4);
+    EXPECT_EQ(vec[4], 5);
+    EXPECT_EQ(vec[5], 6);
+    EXPECT_EQ(vec[6], 7);
+}
+
+TEST(VectorTests, Test33) {
+    Vector<int> vec = {1, 2, 3};
+    auto it = vec.end();
+    vec.insert_many(it, 4, 5);
+
+    ASSERT_EQ(vec.size(), 5u);
+    EXPECT_EQ(vec[0], 1);
+    EXPECT_EQ(vec[1], 2);
+    EXPECT_EQ(vec[2], 3);
+    EXPECT_EQ(vec[3], 4);
+    EXPECT_EQ(vec[4], 5);
+}
+
+TEST(VectorTests, Test34) {
+    Vector<int> vec;
+    vec.insert_many(vec.begin(), 10, 20, 30);
+
+    ASSERT_EQ(vec.size(), 3u);
+    EXPECT_EQ(vec[0], 10);
+    EXPECT_EQ(vec[1], 20);
+    EXPECT_EQ(vec[2], 30);
+}
+
 }
 
 

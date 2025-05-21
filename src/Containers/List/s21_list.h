@@ -245,10 +245,6 @@ namespace s21 {
                 push_front(value);
                 --pos;
                 return pos;
-            }else if(pos == end()){
-                push_back(value);
-                ++pos;
-                return pos;
             }
             
             Node* newNode = new Node(value);
@@ -398,6 +394,20 @@ namespace s21 {
 
             other.head = other.tail = nullptr;
         }
+        template<typename... Args>
+        void insert_many_back(Args&&... args){
+            (push_back(std::forward<Args>(args)), ...);
+        }
+        template<typename... Args>
+        void insert_many_front(Args&&... args){
+            (push_front(std::forward<Args>(args)), ...);
+        }
+        template<typename... Args>
+        iterator insert_many(iterator pos, Args&&... args){
+            (insert(pos, std::forward<Args>(args)), ...);
+            return pos;
+        }
+
     private:
         Node* head;
         Node* tail;

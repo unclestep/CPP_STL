@@ -33,6 +33,11 @@ namespace s21{
 		void push(const_reference value);
 		void pop();
 		void swap(Stack& other);
+
+		template<typename... Args>
+        void insert_many_back(Args&&... args){
+            (push(std::forward<Args>(args)), ...);
+        }
 	};
 
 }

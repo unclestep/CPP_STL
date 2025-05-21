@@ -81,6 +81,27 @@ public:
 
     iterator end();
 	iterator end() const;
+    
+    template <typename... Args>
+    void insert_many_back(Args&&... args){
+        (push_back(std::forward<Args>(args)), ...);
+    }
+    template <typename... Args>
+    iterator insert_many(iterator pos, Args&&... args) {
+        size_type index = pos - begin();  
+
+        Vector<value_type> temp = {std::forward<Args>(args)...};
+
+        reserve(m_size + temp.size()); 
+
+        pos = begin() + index;
+
+        for (auto& val : temp) {
+            pos = insert(pos, val);
+            ++pos;
+        }
+        return pos;
+    }
 
 };
 }

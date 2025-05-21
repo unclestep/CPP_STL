@@ -84,5 +84,51 @@ namespace s21{
         s2 = std::move(s1);
 		EXPECT_EQ(s2.top(), 6);
 	}
+	TEST(StackTests, Test16) {
+		s21::Stack<int> stack;
+		stack.insert_many_back(42);
+
+		ASSERT_EQ(stack.size(), 1);
+		EXPECT_EQ(stack.top(), 42);
+	}
+
+	TEST(StackTests, Test17) {
+		s21::Stack<int> stack;
+		stack.insert_many_back(1, 2, 3, 4);
+
+		ASSERT_EQ(stack.size(), 4);
+		EXPECT_EQ(stack.top(), 4);
+
+		stack.pop();
+		EXPECT_EQ(stack.top(), 3);
+
+		stack.pop();
+		EXPECT_EQ(stack.top(), 2);
+	}
+
+	TEST(StackTests, Test18) {
+		s21::Stack<int> stack;
+		stack.push(10);
+		stack.insert_many_back(20, 30);
+
+		ASSERT_EQ(stack.size(), 3);
+
+		EXPECT_EQ(stack.top(), 30);
+		stack.pop();
+		EXPECT_EQ(stack.top(), 20);
+		stack.pop();
+		EXPECT_EQ(stack.top(), 10);
+	}
+
+	TEST(StackTests, Test19) {
+		s21::Stack<std::string> stack;
+		stack.insert_many_back("hello", "world");
+
+		ASSERT_EQ(stack.size(), 2);
+		EXPECT_EQ(stack.top(), "world");
+
+		stack.pop();
+		EXPECT_EQ(stack.top(), "hello");
+	}
 
 }

@@ -16,6 +16,10 @@ Vector<T>::Vector(std::initializer_list<value_type> const &items) : m_size(items
 
 template <typename T>
 void Vector<T>::reserve_more_capacity(size_type size) {
+	if (size == 0) {
+        size = 1;
+    }
+
 	if (size > m_capacity)
 	{
 		value_type *buff = new value_type[size];

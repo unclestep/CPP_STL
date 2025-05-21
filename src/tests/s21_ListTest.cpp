@@ -263,4 +263,147 @@ namespace s21{
         }
         
     }
+    TEST(ListTests, Test28) {
+        s21::List<int> list;
+        list.insert_many_back(42);
+
+        ASSERT_EQ(list.size(), 1);
+        EXPECT_EQ(list.front(), 42);
+        EXPECT_EQ(list.back(), 42);
+    }
+
+    TEST(ListTests, Test29) {
+        s21::List<int> list;
+        list.insert_many_back(1, 2, 3, 4, 5);
+
+        ASSERT_EQ(list.size(), 5);
+
+        int expected = 1;
+        for (auto it = list.begin(); it != nullptr; ++it, ++expected) {
+            EXPECT_EQ(*it, expected);
+        }
+    }
+
+    TEST(ListTests, Test30) {
+        s21::List<int> list;
+        list.push_back(100);
+        list.insert_many_back(200, 300, 400);
+
+        ASSERT_EQ(list.size(), 4);
+
+        int expected_values[] = {100, 200, 300, 400};
+        int i = 0;
+        for (auto it = list.begin(); it != nullptr; ++it, ++i) {
+            EXPECT_EQ(*it, expected_values[i]);
+        }
+    }
+
+    TEST(ListTests, Test31) {
+        s21::List<std::string> list;
+        list.insert_many_back("one", "two", "three");
+
+        ASSERT_EQ(list.size(), 3);
+
+        std::string expected_values[] = {"one", "two", "three"};
+        int i = 0;
+        for (auto it = list.begin(); it != nullptr; ++it, ++i) {
+            EXPECT_EQ(*it, expected_values[i]);
+        }
+    }
+    TEST(ListTests, Test32) {
+        s21::List<int> list;
+        list.insert_many_front(5);
+
+        ASSERT_EQ(list.size(), 1);
+        EXPECT_EQ(list.front(), 5);
+        EXPECT_EQ(list.back(), 5);
+    }
+
+    TEST(ListTests, Test33) {
+        s21::List<int> list;
+        list.insert_many_front(1, 2, 3);
+
+        ASSERT_EQ(list.size(), 3);
+        EXPECT_EQ(list.front(), 3);
+        EXPECT_EQ(list.back(), 1);
+
+        auto it = list.begin();
+        EXPECT_EQ(*it, 3); ++it;
+        EXPECT_EQ(*it, 2); ++it;
+        EXPECT_EQ(*it, 1);
+    }
+
+    TEST(ListTests, Test34) {
+        s21::List<int> list;
+        list.push_back(10);
+        list.insert_many_front(20, 30);
+
+        ASSERT_EQ(list.size(), 3);
+        EXPECT_EQ(list.front(), 30);
+        EXPECT_EQ(list.back(), 10);
+
+        auto it = list.begin();
+        EXPECT_EQ(*it, 30); ++it;
+        EXPECT_EQ(*it, 20); ++it;
+        EXPECT_EQ(*it, 10);
+    }
+
+    TEST(ListTests, Test35) {
+        s21::List<std::string> list;
+        list.insert_many_front("one", "two", "three");
+
+        ASSERT_EQ(list.size(), 3);
+        EXPECT_EQ(list.front(), "three");
+        EXPECT_EQ(list.back(), "one");
+
+        auto it = list.begin();
+        EXPECT_EQ(*it, "three"); ++it;
+        EXPECT_EQ(*it, "two"); ++it;
+        EXPECT_EQ(*it, "one");
+    }
+    TEST(ListTests, Test36) {
+        List<int> lst = {2, 3, 4};
+        auto pos = lst.begin();  // указывает на элемент 2
+
+        lst.insert_many(pos, 100, 200);
+
+        auto it = lst.begin();
+        EXPECT_EQ(*it, 100); ++it;
+        EXPECT_EQ(*it, 200); ++it;
+        EXPECT_EQ(*it, 2); ++it;
+        EXPECT_EQ(*it, 3); ++it;
+        EXPECT_EQ(*it, 4); ++it;
+        EXPECT_EQ(it, nullptr);
+    }
+
+    TEST(ListTests, Test37) {
+        List<int> lst = {1, 2, 5, 6};
+        auto pos = lst.begin();
+        ++pos; ++pos;  // указывает на 5
+
+        lst.insert_many(pos, 100, 101);
+
+        auto it = lst.begin();
+        EXPECT_EQ(*it, 1); ++it;
+        EXPECT_EQ(*it, 2); ++it;
+        EXPECT_EQ(*it, 100); ++it;
+        EXPECT_EQ(*it, 101); ++it;
+        EXPECT_EQ(*it, 5); ++it;
+        EXPECT_EQ(*it, 6); ++it;
+        EXPECT_EQ(it, nullptr);
+    }
+
+    TEST(ListTests, Test38) {
+        List<int> lst = {1, 2, 3};
+        auto pos = lst.end();  
+        lst.insert_many(pos, 10, 11);
+
+        auto it = lst.begin();
+        EXPECT_EQ(*it, 1); ++it;
+        EXPECT_EQ(*it, 2); ++it;
+        EXPECT_EQ(*it, 10); ++it;
+        EXPECT_EQ(*it, 11); ++it;
+        EXPECT_EQ(*it, 3); 
+    }
+
 }
