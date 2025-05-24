@@ -8,4 +8,5 @@
 #include "List/s21_list.tpp"
 #include "Queue/s21_queue.h"
 #include "Associative/s21_set.h"
+#include "Associative/s21_map.h"
 #endif

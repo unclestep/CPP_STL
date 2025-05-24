@@ -17,14 +17,13 @@ namespace s21 {
         using const_iterator = typename parent::const_iterator;
         using size_type = size_t;
     private:
-        static key_type get_key_pair(const value_type& v){return v.first;};
-        static key_type get_key(const key_type& v){return v};
+        static key_type get_key(const value_type& v){return v.first;};
     public:
         map() : parent() {}
 
         map(std::initializer_list<value_type> const &items) {
             for (const auto& item : items) {
-                this->_insert(item, get_key_pair, 0);
+                this->_insert(item, get_key, 0);
             }
         }
 
@@ -76,11 +75,11 @@ namespace s21 {
         }
 
         std::pair<iterator, bool> insert(const value_type& value) {
-            return this->_insert(value, get_key_pair, 0);
+            return this->_insert(value, get_key, 0);
         }
 
         std::pair<iterator, bool> insert(const Key& key, const T& obj) {
-            return this->_insert(std::make_pair(key, obj), get_key_pair, 0);
+            return this->_insert(std::make_pair(key, obj), get_key, 0);
         }
 
         std::pair<iterator, bool> insert_or_assign(const Key& key, const T& obj) {
@@ -108,7 +107,11 @@ namespace s21 {
         }
 
         void merge(map& other) {
-            this->_merge(other, get_key_pair, 0);
+            this->_merge(other, get_key, 0);
+        }
+
+        iterator find(const Key& key) {
+            return this->_find(key, get_key);
         }
 
         bool contains(const Key& key) {
@@ -117,7 +120,7 @@ namespace s21 {
 
         template <typename... Args>
         std::vector<std::pair<iterator, bool>> insert_many(Args&&... args) {
-            return this->_insert_many(get_key_pair, 0, std::forward<Args>(args)...);
+            return this->_insert_many(get_key, 0, std::forward<Args>(args)...);
         }
     };
 }

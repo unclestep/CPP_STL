@@ -5,10 +5,11 @@
 #include <iterator>
 #include <limits>
 #include <vector>
+#include <string>
 
-/* ################### */
-/* RED-BLACK TREE NODE */
-/* ################### */
+/* ####################### */
+/* # RED-BLACK TREE NODE # */
+/* ####################### */
 enum class Color : bool {
     RED,
     BLACK
@@ -30,15 +31,15 @@ struct RBTNode {
     RBTNode(const Value& v, Color c, RBTNode* l, RBTNode* r, RBTNode* p) :
         value(v), color(c), left(l), right(r), parent(p) {}
 };
-/* ########################## */
-/* END OF RED-BLACK TREE NODE */
-/* ########################## */
+/* ############################## */
+/* # END OF RED-BLACK TREE NODE # */
+/* ############################## */
 
 
 
-/* ####################### */
-/* RED-BLACK TREE ITERATOR */
-/* ####################### */
+/* ########################### */
+/* # RED-BLACK TREE ITERATOR # */
+/* ########################### */
 template <typename Value>
 class RBTIterator {
 public:
@@ -46,6 +47,7 @@ public:
     using reference = value_type&;
     using pointer = value_type*;
     using node_type = RBTNode<value_type>;
+    using difference_type = std::ptrdiff_t;
 private:
     node_type* node;
     node_type* nil;
@@ -158,15 +160,15 @@ public:
     }
 
 };
-/* ############################## */
-/* END OF RED-BLACK TREE ITERATOR */
-/* ############################## */
+/* ################################## */
+/* # END OF RED-BLACK TREE ITERATOR # */
+/* ################################## */
 
 
 
-/* ############################# */
-/* RED-BLACK TREE CONST ITERATOR */
-/* ############################# */
+/* ################################# */
+/* # RED-BLACK TREE CONST ITERATOR # */
+/* ################################# */
 template <typename Value>
 class RBTConstIterator {
 public:
@@ -174,6 +176,7 @@ public:
     using const_reference = const value_type&;
     using const_pointer = const value_type*;
     using node_type = RBTNode<value_type>;
+    using difference_type = std::ptrdiff_t;
 private:
     node_type* node;
     node_type* nil;
@@ -535,7 +538,7 @@ private:
             y_initial_color = y->color;
             x = y->right;
 
-            if (y->parent != z) { /* если y - непрямой наследник */
+            if (y->parent != z) {  /* if y is indirect successor */ 
                 transplant(y, x);
                 y->right = z->right;
                 y->right->parent = y;
@@ -561,16 +564,16 @@ private:
         node_type* parent = nil;
         node_type* cur = root;
         auto key = get_key(attachNode->value);
-        bool isLeft = false;
+        bool isLeft = 0;
 
         while (cur != nil) {
             parent = cur;
             if (key < get_key(cur->value)) {
                 cur = cur->left;
-                isLeft = true;
+                isLeft = 1;
             } else if (key > get_key(cur->value) || duplicates) {
                 cur = cur->right;
-                isLeft = false;
+                isLeft = 0;
             }
         }
 
@@ -590,6 +593,7 @@ private:
     }
 
 protected:
+    /* RULE OF FIVE */
     RBT() : root(nullptr), nil(nullptr), size(0) {
         nil = new node_type();
         nil->left = nil->right = nil->parent = nil;
@@ -605,7 +609,7 @@ protected:
         : root(other.root), nil(other.nil), size(other.size) {
         other.root = nullptr;
         other.nil = nullptr;
-        other.size = 0;
+        other.size = 0U;
     }
 
     ~RBT() {
@@ -624,6 +628,7 @@ protected:
         _swap(other);
         return *this;
     }
+    /* END OF RULE OF FIVE*/
 
     /* ITERATORS */
     iterator _begin() {
@@ -661,13 +666,7 @@ protected:
     void _clear() {
         clearTree(root);
         root = nil;
-        size = 0;
-    }
-
-    void _swap(RBT& other) noexcept {
-        std::swap(root, other.root);
-        std::swap(nil, other.nil);
-        std::swap(size, other.size);
+        size = 0U;
     }
 
     template <typename Getter>
@@ -711,29 +710,6 @@ protected:
 
         return {it, success};
     }
-    
-    template <typename Key, typename Getter>
-    iterator _find(const Key& key, Getter get_key) {
-        node_type* cur = root;
-        iterator res = _end();
-
-        while (cur != nil && res == _end()) {
-            if (key < get_key(cur->value)) {
-                cur = cur->left;
-            } else if (key > get_key(cur->value)) {
-                cur = cur->right;
-            } else {
-                res = iterator(cur, nil, root);
-            }
-        }
-
-        return res;
-    }
-
-    template <typename Key, typename Getter>
-    bool _contains(const Key& key, Getter get_key) {
-        return _find(key, get_key) != _end();
-    }
 
     void _erase(iterator pos) {
         node_type* z = nullptr;
@@ -757,7 +733,7 @@ protected:
             y_initial_color = y->color;
             x = y->right;
 
-            if (y->parent != z) { /* если y - непрямой наследник */
+            if (y->parent != z) { /* if y is indirect successor */
                 transplant(y, x);
                 y->right = z->right;
                 y->right->parent = y;
@@ -778,11 +754,17 @@ protected:
             fixDelete(x);
     }
 
+    void _swap(RBT& other) noexcept {
+        std::swap(root, other.root);
+        std::swap(nil, other.nil);
+        std::swap(size, other.size);
+    }
+
     template <typename Getter>
     void _merge(RBT& other, Getter get_key, bool duplicates) {
         std::vector<iterator> moving;
         for (auto it = other._begin(); it != other._end(); ++it) {
-            if (!_contains(*it, get_key) || duplicates) {
+            if (!_contains(get_key(*it), get_key) || duplicates) {
                 moving.push_back(it);
             }
         }
@@ -791,15 +773,44 @@ protected:
             attachNode(n, get_key, duplicates);
         }
     }
+    /* END OF MODIFIERS */
+    
+    /* LOOKUP */
+    template <typename Key, typename Getter>
+    iterator _find(const Key& key, Getter get_key) {
+        node_type* cur = root;
+        iterator res = _end();
 
-    template <typename... Args, typename Getter>
+        while (cur != nil && res == _end()) {
+            if (key < get_key(cur->value)) {
+                cur = cur->left;
+            } else if (key > get_key(cur->value)) {
+                cur = cur->right;
+            } else {
+                res = iterator(cur, nil, root);
+            }
+        }
+
+        return res;
+    }
+
+    template <typename Key, typename Getter>
+    bool _contains(const Key& key, Getter get_key) {
+        return _find(key, get_key) != _end();
+    }
+    /* END OF LOOKUP */
+
+    /* EXTRA */
+    template <typename Getter, typename... Args>
     std::vector<std::pair<iterator, bool>> _insert_many(Getter get_key, bool duplicates, Args&&... args) {
         std::vector<std::pair<iterator, bool>> result;
         (result.push_back(_insert(std::forward<Args>(args), get_key, duplicates)), ...);
         return result;
     }
+    /* END OF EXTRA */
 
 public:
+    /* GETTERS */
     node_type* getRoot() const {
         return root;
     }
@@ -807,7 +818,11 @@ public:
     node_type* getNil() const {
         return nil;
     }
+    /* END OF GETTERS */
 
 };
+/* ######################################## */
+/* # END OF RED-BLACK TREE DATA STRUCTURE # */
+/* ######################################## */
 
 #endif
