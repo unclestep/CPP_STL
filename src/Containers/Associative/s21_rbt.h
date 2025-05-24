@@ -45,18 +45,36 @@ public:
     using value_type = Value;
     using reference = value_type&;
     using pointer = value_type*;
+    using node_type = RBTNode<value_type>;
 private:
-    RBTNode<value_type>* node;
-    RBTNode<value_type>* nil;
-    RBTNode<value_type>* root;
+    node_type* node;
+    node_type* nil;
+    node_type* root;
 public:
     RBTIterator() 
         : node(nullptr), nil(nullptr), root(nullptr) {}
-    RBTIterator(RBTNode<value_type>* node, RBTNode<value_type>* nil, RBTNode<value_type>* root) 
+    RBTIterator(node_type* node, node_type* nil, node_type* root) 
         : node(node), nil(nil), root(root) {}
 
     RBTIterator(const RBTIterator& other) 
-        : node(other.node), nil(other.nil), root(other.root) {}    
+        : node(other.node), nil(other.nil), root(other.root) {} 
+
+    ~RBTIterator() {
+        node = nullptr;
+        nil = nullptr;
+        root = nullptr;
+    }
+        
+    RBTIterator& operator = (const RBTIterator& other) {
+        RBTIterator tmp(other);
+        swap(tmp);
+        return *this;
+    }
+
+    RBTIterator& operator = (RBTIterator&& other) noexcept {
+        swap(other);
+        return *this;
+    }
 
     bool operator == (const RBTIterator& other) const {
         return node == other.node;
@@ -121,6 +139,24 @@ public:
         return tmp;
     }
 
+    void swap(RBTIterator& other) noexcept {
+        std::swap(node, other.node);
+        std::swap(nil, other.nil);
+        std::swap(root, other.root);
+    }
+
+    node_type* getNode() const {
+        return node;
+    }
+
+    node_type* getNil() const {
+        return nil;
+    }
+
+    node_type* getRoot() const {
+        return root;
+    }
+
 };
 /* ############################## */
 /* END OF RED-BLACK TREE ITERATOR */
@@ -137,19 +173,37 @@ public:
     using value_type = Value;
     using const_reference = const value_type&;
     using const_pointer = const value_type*;
+    using node_type = RBTNode<value_type>;
 private:
-    RBTNode<value_type>* node;
-    RBTNode<value_type>* nil;
-    RBTNode<value_type>* root;
+    node_type* node;
+    node_type* nil;
+    node_type* root;
 public:
     RBTConstIterator() 
         : node(nullptr), nil(nullptr), root(nullptr) {}
 
-    RBTConstIterator(RBTNode<value_type>* node, RBTNode<value_type>* nil, RBTNode<value_type>* root) 
+    RBTConstIterator(node_type* node, node_type* nil, node_type* root) 
         : node(node), nil(nil), root(root) {}
         
     RBTConstIterator(const RBTConstIterator& other) 
         : node(other.node), nil(other.nil), root(other.root) {} 
+
+    ~RBTConstIterator() {
+        node = nullptr;
+        nil = nullptr;
+        root = nullptr;
+    }
+        
+    RBTConstIterator& operator = (const RBTConstIterator& other) {
+        RBTConstIterator tmp(other);
+        swap(tmp);
+        return *this;
+    }
+
+    RBTConstIterator& operator = (RBTConstIterator&& other) noexcept {
+        swap(other);
+        return *this;
+    }
 
     bool operator == (const RBTConstIterator& other) const {
         return node == other.node;
@@ -213,6 +267,24 @@ public:
         --(*this);
         return tmp;
     }
+
+    void swap(RBTConstIterator& other) noexcept {
+        std::swap(node, other.node);
+        std::swap(nil, other.nil);
+        std::swap(root, other.root);
+    }
+
+    node_type* getNode() const {
+        return node;
+    }
+
+    node_type* getNil() const {
+        return nil;
+    }
+
+    node_type* getRoot() const {
+        return root;
+    }
 };
 /* ######################################## */
 /* # END OF RED-BLACK TREE CONST ITERATOR # */
@@ -240,14 +312,14 @@ private:
 
     node_type* min(node_type* start_node) const {
         node_type* cur = start_node;
-        while (cur->left != nil) {
+        while (cur && cur->left != nil) {
             cur = cur->left;
         }
         return cur;
     }
 
     void clearTree(node_type* node) {
-        if (node && node != nil) {
+        if (node != nil && nil && node) {
             clearTree(node->left);
             clearTree(node->right);
             delete node;
@@ -288,7 +360,7 @@ private:
             p->color = Color::BLACK;
             u->color = Color::BLACK;
             g->color = Color::RED;
-            fix(g);
+            fixInsert(g);
         } else if (u->color == Color::BLACK) {
             rotate(y, p, g, u);
         }
@@ -446,6 +518,77 @@ private:
         v->parent = u->parent;
     }
 
+    node_type* detachNode(iterator pos) {
+        node_type* z = pos.getNode();
+        node_type* y = z;
+        Color y_initial_color = y->color;
+        node_type* x = nullptr;
+
+        if (z->left == nil) {
+            x = z->right;
+            transplant(z, x);
+        } else if (z->right == nil) {
+            x = z->left;
+            transplant(z, x);
+        } else if (z->left != nil && z->right != nil) {
+            y = min(z->right);
+            y_initial_color = y->color;
+            x = y->right;
+
+            if (y->parent != z) { /* если y - непрямой наследник */
+                transplant(y, x);
+                y->right = z->right;
+                y->right->parent = y;
+            }
+
+            transplant(z, y);
+            y->left = z->left;
+            z->left->parent = y;
+            y->color = z->color;
+        }
+
+        z->parent = z->left = z->right = nullptr;
+        --size;
+
+        if (y_initial_color == Color::BLACK) 
+            fixDelete(x);
+
+        return z;
+    }
+
+    template <typename Getter>
+    void attachNode(node_type* attachNode, Getter get_key, bool duplicates) {
+        node_type* parent = nil;
+        node_type* cur = root;
+        auto key = get_key(attachNode->value);
+        bool isLeft = false;
+
+        while (cur != nil) {
+            parent = cur;
+            if (key < get_key(cur->value)) {
+                cur = cur->left;
+                isLeft = true;
+            } else if (key > get_key(cur->value) || duplicates) {
+                cur = cur->right;
+                isLeft = false;
+            }
+        }
+
+        attachNode->left = attachNode->right = attachNode->parent = nil;
+        if (parent == nil) {
+            root = attachNode;  
+        } else if (isLeft) {
+            attachNode->parent = parent;
+            parent->left = attachNode;
+        } else if (!isLeft) {
+            attachNode->parent = parent;
+            parent->right = attachNode;
+        }
+        
+        ++size;
+        fixInsert(attachNode);
+    }
+
 protected:
     RBT() : root(nullptr), nil(nullptr), size(0) {
         nil = new node_type();
@@ -528,27 +671,29 @@ protected:
     }
 
     template <typename Getter>
-    std::pair<iterator, bool> _insert(const value_type& value, Getter get_key) {
+    std::pair<iterator, bool> _insert(const value_type& value, Getter get_key, bool duplicates) {
         node_type* parent = nil;
         node_type* cur = root;
         auto key = get_key(value);
-        bool isLeft = false;
-        std::pair<iterator, bool> res = {iterator(cur, nil, root), true};
+        bool isLeft = 0;
+        iterator it;
+        bool success = 1;
 
-        while (cur != nil && res.second) {
+        while (cur != nil && success) {
             parent = cur;
             if (key < get_key(cur->value)) {
                 cur = cur->left;
-                isLeft = true;
-            } else if (key > get_key(cur->value)) {
+                isLeft = 1;
+            } else if (key > get_key(cur->value) || duplicates) {
                 cur = cur->right;
-                isLeft = false;
+                isLeft = 0;
             } else {
-                res = {iterator(cur, nil, root), false};
+                it = iterator(cur, nil, root);
+                success = 0;
             }
         }
 
-        if (res.second) {
+        if (success) {
             node_type* newNode = new node_type(value, Color::RED, nil, nil, parent);
 
             if (parent == nil) {
@@ -561,10 +706,10 @@ protected:
 
             ++size;
             fixInsert(newNode);
-            res = {iterator(newNode, nil, root), true};
+            it = iterator(newNode, nil, root);
         }
 
-        return res;
+        return {it, success};
     }
     
     template <typename Key, typename Getter>
@@ -591,21 +736,23 @@ protected:
     }
 
     void _erase(iterator pos) {
-        if (pos->node == nil)
-            throw std::invalid_argument("Invalid iterator!");
-
-        node_type* z = pos->node;
-        node_type* y = z;
-        Color y_initial_color = y->color;
+        node_type* z = nullptr;
+        node_type* y = nullptr;
+        Color y_initial_color = Color::RED;
+        if (pos != _end() && pos.getNode() != nil && pos.getNode() != nullptr) {
+            z = pos.getNode();
+            y = z;
+            y_initial_color = y->color;
+        }
         node_type* x = nullptr;
 
-        if (z->left == nil) {
+        if (z && z->left == nil) {
             x = z->right;
             transplant(z, x);
-        } else if (z->right == nil) {
+        } else if (z && z->right == nil) {
             x = z->left;
             transplant(z, x);
-        } else if (z->left != nil && z->right != nil) {
+        } else if (z && z->left != nil && z->right != nil) {
             y = min(z->right);
             y_initial_color = y->color;
             x = y->right;
@@ -622,102 +769,33 @@ protected:
             y->color = z->color;
         }
 
-        delete z;
-        --size;
+        if (z) {
+            delete z;
+            --size;
+        }
 
         if (y_initial_color == Color::BLACK) 
             fixDelete(x);
     }
 
-    node_type* detachNode(iterator pos) {
-        node_type* z = pos->node;
-        node_type* y = z;
-        Color y_initial_color = y->color;
-        node_type* x = nullptr;
-
-        if (z->left == nil) {
-            x = z->right;
-            transplant(z, x);
-        } else if (z->right == nil) {
-            x = z->left;
-            transplant(z, x);
-        } else if (z->left != nil && z->right != nil) {
-            y = min(z->right);
-            y_initial_color = y->color;
-            x = y->right;
-
-            if (y->parent != z) { /* если y - непрямой наследник */
-                transplant(y, x);
-                y->right = z->right;
-                y->right->parent = y;
-            }
-
-            transplant(z, y);
-            y->left = z->left;
-            z->left->parent = y;
-            y->color = z->color;
-        }
-
-        z->parent = z->left = z->right = nullptr;
-        --size;
-
-        if (y_initial_color == Color::BLACK) 
-            fixDelete(x);
-
-        return z;
-    }
-
     template <typename Getter>
-    void attachNode(node_type* attachNode, Getter get_key) {
-        node_type* parent = nil;
-        node_type* cur = root;
-        auto key = get_key(attachNode->value);
-        bool isLeft = false;
-
-        while (cur != nil) {
-            parent = cur;
-            if (key < get_key(cur->value)) {
-                cur = cur->left;
-                isLeft = true;
-            } else if (key > get_key(cur->value)) {
-                cur = cur->right;
-                isLeft = false;
-            }
-        }
-
-        attachNode->left = attachNode->right = attachNode->parent = nil;
-        if (parent == nil) {
-            root = attachNode;  
-        } else if (isLeft) {
-            attachNode->parent = parent;
-            parent->left = attachNode;
-        } else if (!isLeft) {
-            attachNode->parent = parent;
-            parent->right = attachNode;
-        }
-        
-        ++size;
-        fixInsert(attachNode);
-    }
-
-    template <typename Getter>
-    void _merge(RBT& other, Getter get_key) {
+    void _merge(RBT& other, Getter get_key, bool duplicates) {
         std::vector<iterator> moving;
         for (auto it = other._begin(); it != other._end(); ++it) {
-            if (!contains(*it)) {
+            if (!_contains(*it, get_key) || duplicates) {
                 moving.push_back(it);
             }
         }
         for (auto it : moving) {
             node_type* n = other.detachNode(it);
-            attachNode(n, get_key);
+            attachNode(n, get_key, duplicates);
         }
     }
 
     template <typename... Args, typename Getter>
-    std::vector<std::pair<iterator, bool>> _insert_many(Args&&... args, Getter get_key) {
+    std::vector<std::pair<iterator, bool>> _insert_many(Getter get_key, bool duplicates, Args&&... args) {
         std::vector<std::pair<iterator, bool>> result;
-        (result.push_back(_insert(std::forward<Args>(args), get_key)), ...);
+        (result.push_back(_insert(std::forward<Args>(args), get_key, duplicates)), ...);
         return result;
     }
 

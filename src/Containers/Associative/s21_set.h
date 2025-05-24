@@ -5,7 +5,7 @@
 
 namespace s21 {
     template <typename Key>
-    class set : protected RBT<Key> {
+    class set : RBT<Key> {
     public:
         using key_type = Key;
         using value_type = Key;
@@ -22,7 +22,7 @@ namespace s21 {
 
         set(std::initializer_list<value_type> const &items) {
             for (const auto& item : items) {
-                _insert(item, get_key);
+                this->_insert(item, get_key, 0);
             }
         }
 
@@ -51,7 +51,7 @@ namespace s21 {
         }
 
         std::pair<iterator, bool> insert(const value_type& value) {
-            return this->_insert(value, get_key);
+            return this->_insert(value, get_key, 0);
         }
 
         void erase(iterator pos) {
@@ -63,7 +63,7 @@ namespace s21 {
         }
 
         void merge(set& other) {
-            this->_merge(other, get_key);
+            this->_merge(other, get_key, 0);
         }
 
         iterator find(const Key& key) {
@@ -72,6 +72,11 @@ namespace s21 {
 
         bool contains(const Key& key) {
             return this->_contains(key, get_key);
+        }
+
+        template <typename... Args>
+        std::vector<std::pair<iterator, bool>> insert_many(Args&&... args) {
+            return this->_insert_many(get_key, 0, std::forward<Args>(args)...);
         }
     };
 }

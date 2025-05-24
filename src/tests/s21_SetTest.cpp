@@ -10,7 +10,7 @@ namespace s21 {
         set<int> s = {1, 2, 3, 4};
         TEST_SET(s);
 
-        EXPECT_EQ(s.size(), 4);
+        EXPECT_EQ(s.size(), 4U);
         EXPECT_TRUE(s.contains(1));
         EXPECT_TRUE(s.contains(2));
         EXPECT_TRUE(s.contains(3));
@@ -21,7 +21,7 @@ namespace s21 {
         set<int> s = {1, 1, 2, 2};
         TEST_SET(s);
 
-        EXPECT_EQ(s.size(), 2);
+        EXPECT_EQ(s.size(), 2U);
         EXPECT_TRUE(s.contains(1));
         EXPECT_TRUE(s.contains(2));
 
@@ -56,8 +56,8 @@ namespace s21 {
         set<int> s2 = std::move(s1);
         TEST_SET(s2);
 
-        EXPECT_EQ(s1.size(), 0);
-        EXPECT_EQ(s2.size(), 4);
+        EXPECT_EQ(s1.size(), 0U);
+        EXPECT_EQ(s2.size(), 4U);
         EXPECT_EQ(s1.begin(), s1.end());
         EXPECT_TRUE(s2.contains(1));
         EXPECT_TRUE(s2.contains(2));
@@ -87,8 +87,8 @@ namespace s21 {
         s2 = std::move(s1);
         TEST_SET(s2);
 
-        EXPECT_EQ(s1.size(), 0);
-        EXPECT_EQ(s2.size(), 4);
+        EXPECT_EQ(s1.size(), 0U);
+        EXPECT_EQ(s2.size(), 4U);
         EXPECT_EQ(s1.begin(), s1.end());
         EXPECT_TRUE(s2.contains(1));
         EXPECT_TRUE(s2.contains(2));
@@ -104,14 +104,14 @@ namespace s21 {
     TEST(SetTest, ClearEmpty) {
         set<int> s;
         s.clear();
-        EXPECT_EQ(s.size(), 0);
+        EXPECT_EQ(s.size(), 0U);
         EXPECT_EQ(s.begin(), s.end());
     }
 
     TEST(SetTest, ClearNonEmpty) {
         set<int> s = {1, 2, 3, 4, 5};
         s.clear();
-        EXPECT_EQ(s.size(), 0);
+        EXPECT_EQ(s.size(), 0U);
         EXPECT_EQ(s.begin(), s.end());
     }
 
@@ -120,7 +120,7 @@ namespace s21 {
         s.insert(1);
         TEST_SET(s);
 
-        EXPECT_EQ(s.size(), 1);
+        EXPECT_EQ(s.size(), 1U);
         EXPECT_TRUE(s.contains(1));
     }
 
@@ -129,7 +129,7 @@ namespace s21 {
         s.insert(5);
         TEST_SET(s);
 
-        EXPECT_EQ(s.size(), 4);
+        EXPECT_EQ(s.size(), 4U);
         EXPECT_TRUE(s.contains(5));
     }
 
@@ -139,7 +139,7 @@ namespace s21 {
             s.insert(i);
         }
         TEST_SET(s);
-        EXPECT_EQ(s.size(), 21);
+        EXPECT_EQ(s.size(), 21U);
 
         int exp = -10;
         for (auto it = s.begin(); it != s.end(); ++it, ++exp) {
@@ -153,12 +153,12 @@ namespace s21 {
             s.insert(i);
         }
         TEST_SET(s);
-        EXPECT_EQ(s.size(), 21);
+        EXPECT_EQ(s.size(), 21U);
 
         int exp = 10;
         for (auto it = --s.end();; --it, --exp) {
             EXPECT_EQ(*it, exp);
-            if (it == begin()) break;
+            if (it == s.begin()) break;
         }
     }
     
@@ -168,7 +168,7 @@ namespace s21 {
             s.insert(i);
         }
         TEST_SET(s);
-        EXPECT_EQ(s.size(), 1001);
+        EXPECT_EQ(s.size(), 1001U);
 
         int exp = 0;
         for (auto it = s.begin(); it != s.end(); ++it, ++exp) {
@@ -184,7 +184,7 @@ namespace s21 {
             EXPECT_EQ(res.second, !isDuplicate);
         }
         TEST_SET(s);
-        EXPECT_EQ(s.size(), 21);
+        EXPECT_EQ(s.size(), 21U);
 
         int exp = 0;
         for (auto it = s.begin(); it != s.end(); ++it, ++exp) {
@@ -197,7 +197,7 @@ namespace s21 {
         s.clear();
         s.insert(1);
         TEST_SET(s);
-        EXPECT_EQ(s.size(), 1);
+        EXPECT_EQ(s.size(), 1U);
         EXPECT_TRUE(s.contains(1));
     }
 
@@ -206,7 +206,7 @@ namespace s21 {
         s.clear();
         s.insert(21);
         TEST_SET(s);
-        EXPECT_EQ(s.size(), 1);
+        EXPECT_EQ(s.size(), 1U);
         EXPECT_TRUE(s.contains(21));
     }
 
@@ -215,7 +215,7 @@ namespace s21 {
         auto it = s.find(1);
         s.erase(it);
         TEST_SET(s);
-        EXPECT_EQ(s.size(), 4);
+        EXPECT_EQ(s.size(), 4U);
         EXPECT_FALSE(s.contains(1));
         EXPECT_TRUE(s.contains(2));
         EXPECT_TRUE(s.contains(3));
@@ -228,7 +228,7 @@ namespace s21 {
         auto it = s.find(5);
         s.erase(it);
         TEST_SET(s);
-        EXPECT_EQ(s.size(), 4);
+        EXPECT_EQ(s.size(), 4U);
         EXPECT_FALSE(s.contains(5));
         EXPECT_TRUE(s.contains(4));
         EXPECT_TRUE(s.contains(3));
@@ -241,7 +241,7 @@ namespace s21 {
         auto it = s.find(3);
         s.erase(it);
         TEST_SET(s);
-        EXPECT_EQ(s.size(), 4);
+        EXPECT_EQ(s.size(), 4U);
         EXPECT_FALSE(s.contains(3));
         EXPECT_TRUE(s.contains(1));
         EXPECT_TRUE(s.contains(2));
@@ -254,7 +254,7 @@ namespace s21 {
         auto it = s.find(6);
         s.erase(it);
         TEST_SET(s);
-        EXPECT_EQ(s.size(), 5);
+        EXPECT_EQ(s.size(), 5U);
         EXPECT_TRUE(s.contains(1));
         EXPECT_TRUE(s.contains(2));
         EXPECT_TRUE(s.contains(3));
@@ -266,7 +266,7 @@ namespace s21 {
         set<int> s;
         auto it = s.begin();
         s.erase(it);
-        EXPECT_EQ(s.size(), 0);
+        EXPECT_EQ(s.size(), 0U);
         EXPECT_EQ(s.begin(), s.end());
     }
 
@@ -274,7 +274,7 @@ namespace s21 {
         set<int> s;
         auto it = s.end();
         s.erase(it);
-        EXPECT_EQ(s.size(), 0);
+        EXPECT_EQ(s.size(), 0U);
         EXPECT_EQ(s.begin(), s.end());
     }
 
@@ -287,7 +287,7 @@ namespace s21 {
             s.erase(s.begin());
             TEST_SET(s);
         }
-        EXPECT_EQ(s.size(), 0);
+        EXPECT_EQ(s.size(), 0U);
         EXPECT_EQ(s.begin(), s.end());
     }
 
@@ -301,7 +301,7 @@ namespace s21 {
             s.erase(it);
             TEST_SET(s);
         }
-        EXPECT_EQ(s.size(), 10);
+        EXPECT_EQ(s.size(), 10U);
         for (int z = 2; z <= 20; z += 2) {
             EXPECT_TRUE(s.contains(z));
         }
@@ -315,23 +315,191 @@ namespace s21 {
         auto it = s.begin();
         s.erase(it);
         TEST_SET(s);
-        EXPECT_EQ(s.size(), 0);
+        EXPECT_EQ(s.size(), 0U);
         EXPECT_EQ(s.begin(), s.end());
     }
 
-    TEST(SetTest, EraseSameTwice) {
-        set<int> s = {1, 2, 3, 4, 5};
-        auto it = s.find(3);
-        s.erase(it);
+    TEST(SetTest, InsertManyEmptySet) {
+        set<int> s;
+        auto results = s.insert_many(1, 2, 3, 4, 5);
         TEST_SET(s);
-        s.erase(it);
-        TEST_SET(s);
-        EXPECT_EQ(s.size(), 4);
-        EXPECT_FALSE(s.contains(3));
+        EXPECT_EQ(s.size(), 5U);
         EXPECT_TRUE(s.contains(1));
         EXPECT_TRUE(s.contains(2));
+        EXPECT_TRUE(s.contains(3));
         EXPECT_TRUE(s.contains(4));
         EXPECT_TRUE(s.contains(5));
+        for (const auto& pair : results) {
+            EXPECT_TRUE(pair.second);
+        }
+    }
+
+    TEST(SetTest, InsertManyNonEmptySet) {
+        set<int> s = {0};
+        auto results = s.insert_many(1, 2, 3, 4, 5);
+        TEST_SET(s);
+        EXPECT_EQ(s.size(), 6U);
+        EXPECT_TRUE(s.contains(0));
+        EXPECT_TRUE(s.contains(1));
+        EXPECT_TRUE(s.contains(2));
+        EXPECT_TRUE(s.contains(3));
+        EXPECT_TRUE(s.contains(4));
+        EXPECT_TRUE(s.contains(5));
+        for (const auto& pair : results) {
+            EXPECT_TRUE(pair.second);
+        }
+    }
+
+    TEST(SetTest, InsertManyWithDuplicates) {
+        set<int> s;
+        auto results = s.insert_many(1, 2, 1, 2, 5);
+
+        TEST_SET(s);
+        EXPECT_EQ(s.size(), 3U);
+
+        EXPECT_TRUE(s.contains(1));
+        EXPECT_TRUE(s.contains(2));
+        EXPECT_FALSE(s.contains(3));
+        EXPECT_FALSE(s.contains(4));
+        EXPECT_TRUE(s.contains(5));
+        
+        EXPECT_TRUE(results[0].second);
+        EXPECT_TRUE(results[1].second);
+        EXPECT_FALSE(results[2].second);
+        EXPECT_FALSE(results[3].second);
+        EXPECT_TRUE(results[4].second);
+    }
+
+    TEST(SetTest, InsertManyInDuplicates1) {
+        set<int> s = {1, 2, 1, 2, 5};
+        auto results = s.insert_many(1, 2, 1, 2, 5);
+        
+        TEST_SET(s);
+        EXPECT_EQ(s.size(), 3U);
+
+        EXPECT_TRUE(s.contains(1));
+        EXPECT_TRUE(s.contains(2));
+        EXPECT_FALSE(s.contains(3));
+        EXPECT_FALSE(s.contains(4));
+        EXPECT_TRUE(s.contains(5));
+        
+        EXPECT_FALSE(results[0].second);
+        EXPECT_FALSE(results[1].second);
+        EXPECT_FALSE(results[2].second);
+        EXPECT_FALSE(results[3].second);
+        EXPECT_FALSE(results[4].second);
+    }
+
+    TEST(SetTest, InsertManyInDuplicates2) {
+        set<int> s = {1, 2, 1, 2, 5};
+        auto results = s.insert_many(1, 2, 1, 2, 5, 6);
+        
+        TEST_SET(s);
+        EXPECT_EQ(s.size(), 4U);
+
+        EXPECT_TRUE(s.contains(1));
+        EXPECT_TRUE(s.contains(2));
+        EXPECT_FALSE(s.contains(3));
+        EXPECT_FALSE(s.contains(4));
+        EXPECT_TRUE(s.contains(5));
+        EXPECT_TRUE(s.contains(6));
+        
+        EXPECT_FALSE(results[0].second);
+        EXPECT_FALSE(results[1].second);
+        EXPECT_FALSE(results[2].second);
+        EXPECT_FALSE(results[3].second);
+        EXPECT_FALSE(results[4].second);
+        EXPECT_TRUE(results[5].second);
+    }
+
+    TEST(SetTest, InsertManyNothing1) {
+        set<int> s = {21};
+        auto results = s.insert_many();
+        TEST_SET(s);
+        EXPECT_EQ(s.size(), 1U);
+        EXPECT_TRUE(s.contains(21));
+        EXPECT_TRUE(results.empty());
+    }
+
+    TEST(SetTest, InsertManyNothing2) {
+        set<int> s;
+        auto results = s.insert_many();
+        TEST_SET(s);
+        EXPECT_TRUE(s.empty());
+        EXPECT_TRUE(results.empty());
+    }
+
+    TEST(SetTest, MergeEmptySet1) {
+        set<int> s1 = {1, 2, 3};
+        set<int> s2;
+        s1.merge(s2);
+        TEST_SET(s1);
+        EXPECT_EQ(s1.size(), 3U);
+        EXPECT_TRUE(s1.contains(1));
+        EXPECT_TRUE(s1.contains(2));
+        EXPECT_TRUE(s1.contains(3));
+        EXPECT_TRUE(s2.empty());
+    }
+
+    TEST(SetTest, MergeEmptySet2) {
+        set<int> s1;
+        set<int> s2 = {1, 2, 3};
+        s1.merge(s2);
+        TEST_SET(s1);
+        EXPECT_EQ(s1.size(), 3U);
+        EXPECT_TRUE(s1.contains(1));
+        EXPECT_TRUE(s1.contains(2));
+        EXPECT_TRUE(s1.contains(3));
+        EXPECT_TRUE(s2.empty());
+    }
+
+    TEST(SetTest, MergeBothEmpty) {
+        set<int> s1, s2;
+        s1.merge(s2);
+        TEST_SET(s1);
+        TEST_SET(s2);
+        EXPECT_TRUE(s1.empty());
+        EXPECT_TRUE(s2.empty());
+    }
+
+    TEST(SetTest, MergeItself) {
+        set<int> s = {1, 2, 3};
+        s.merge(s);
+        TEST_SET(s);
+        EXPECT_EQ(s.size(), 3U);
+        EXPECT_TRUE(s.contains(1));
+        EXPECT_TRUE(s.contains(2));
+        EXPECT_TRUE(s.contains(3));
+    }
+
+    TEST(SetTest, MergeNormal) {
+        set<int> s1 = {1, 2, 3};
+        set<int> s2 = {4, 5, 6};
+        s1.merge(s2);
+        TEST_SET(s1);
+        EXPECT_EQ(s1.size(), 6U);
+        EXPECT_TRUE(s1.contains(1));
+        EXPECT_TRUE(s1.contains(2));
+        EXPECT_TRUE(s1.contains(3));
+        EXPECT_TRUE(s1.contains(4));
+        EXPECT_TRUE(s1.contains(5));
+        EXPECT_TRUE(s1.contains(6));
+        EXPECT_TRUE(s2.empty());
+    }
+
+    TEST(SetTest, MergeWithDuplicates) {
+        set<int> s1 = {1, 2, 3, 4};
+        set<int> s2 = {4, 5, 6, 1};
+        s1.merge(s2);
+        TEST_SET(s1);
+        EXPECT_EQ(s1.size(), 6U);
+        EXPECT_TRUE(s1.contains(1));
+        EXPECT_TRUE(s1.contains(2));
+        EXPECT_TRUE(s1.contains(3));
+        EXPECT_TRUE(s1.contains(4));
+        EXPECT_TRUE(s1.contains(5));
+        EXPECT_TRUE(s1.contains(6));
+        EXPECT_EQ(s2.size(), 2U);
     }
 
 }
