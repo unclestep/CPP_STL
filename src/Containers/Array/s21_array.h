@@ -31,7 +31,9 @@ namespace s21{
                 size_a = 0;
             }
             Array(const Array &a){
-                for(auto it = a.cbegin(), it1 = begin(); it < a.cend(); it++, it1++){
+                iterator it1 = begin();
+                const_iterator it = a.cbegin();
+                for(; it < a.cend(); it++, it1++){
                     *it1 = *it;
                 }
                 size_a = a.size();
