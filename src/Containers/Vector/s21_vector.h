@@ -40,7 +40,9 @@ public:
     }
 
 	Vector& operator=(Vector &&v) noexcept;
-    ~Vector() { delete[] arr; }
+    ~Vector() { 
+        delete[] arr; 
+    }
 
     size_type size();
 
@@ -100,7 +102,7 @@ public:
             pos = insert(pos, val);
             ++pos;
         }
-        return pos;
+        return pos - temp.size();
     }
 
 };

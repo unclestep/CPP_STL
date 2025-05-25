@@ -154,15 +154,19 @@ void Vector<T>::erase(iterator pos){
 
 template <typename T>
 Vector<T>::iterator Vector<T>::insert(iterator pos, const_reference value){
+	 if (pos < begin() || pos > end()) {
+        throw std::out_of_range("Vector::insert - invalid position");
+    }
+	
 	size_type index = pos - begin();
 
 	reserve(m_size + 1);
 
 	pos = index + begin();
 
-	for(auto i = end(); i >= pos; --i){
-		*(i+1) = *(i);
-	}
+	for (auto i = end(); i > pos; --i) {
+        *i = *(i - 1); 
+    }
 	*pos = value;
 	m_size = m_size + 1;
 	return pos;
