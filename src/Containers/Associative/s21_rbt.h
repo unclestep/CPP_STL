@@ -6,7 +6,7 @@
 #include <limits>
 #include <vector>
 #include <string>
-
+#include "../Vector/s21_vector.h"
 /* ####################### */
 /* # RED-BLACK TREE NODE # */
 /* ####################### */
@@ -804,7 +804,9 @@ protected:
     template <typename Getter, typename... Args>
     std::vector<std::pair<iterator, bool>> _insert_many(Getter get_key, bool duplicates, Args&&... args) {
         std::vector<std::pair<iterator, bool>> result;
-        (result.push_back(_insert(std::forward<Args>(args), get_key, duplicates)), ...);
+        if constexpr (sizeof...(Args) > 0) {
+            (result.push_back(_insert(std::forward<Args>(args), get_key, duplicates)), ...);
+        }
         return result;
     }
     /* END OF EXTRA */
