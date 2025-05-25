@@ -13,5 +13,8 @@ test: $(TEST_OBJS)
 	g++ $(FLAGS) -o test.out $(TEST_OBJS) $(LIBS)
 	./test.out
 
+valgrind: 
+	valgrind ./test.out
+
 clean:
 	rm -rf *.o */*.o *.out
