@@ -4,8 +4,9 @@
 
 namespace s21 {
 
-template <class T, std::size_t N> class Array {
-public:
+template <class T, std::size_t N>
+class Array {
+ public:
   using value_type = T;
   using reference = T &;
   using const_reference = const T &;
@@ -13,11 +14,11 @@ public:
   using const_iterator = const T *;
   using size_type = size_t;
 
-private:
+ private:
   T arr[N];
   int size_a = N;
 
-public:
+ public:
   Array() : size_a(N) {}
   Array(std::initializer_list<value_type> const &items) {
     int i = 0;
@@ -92,6 +93,6 @@ public:
     }
   }
 };
-} // namespace s21
+}  // namespace s21
 
 #endif

@@ -167,7 +167,7 @@ TEST(ArrayTests, Test20) {
 TEST(ArrayTests, Test21) {
   Array<int, 0> empty_arr;
   EXPECT_NO_THROW(
-      empty_arr.fill(100)); // Не должно быть ошибок на пустом массиве
+      empty_arr.fill(100));  // Не должно быть ошибок на пустом массиве
 }
 
 TEST(ArrayTests, Test22) {
@@ -189,4 +189,4 @@ TEST(ArrayTests, Test23) {
   }
 }
 
-} // namespace s21
+}  // namespace s21
