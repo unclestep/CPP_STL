@@ -16,30 +16,30 @@ This project is part of project-based learning series.
 
 # STL UML
 
-![[STL_UML.png]]
+![STL_UML](materials/STL_UML.png)
 
 # Code Samples
 # General
 
 Using the parent class `s21_rbt` and inheritance helps to avoid code duplication. All associative containers are quite similar and most of their methods look like this:
-![[associative_functions.png]]
+![associative_functions](materials/associative_functions.png)
 The key difference between `s21_set`/`s21_multiset` and `s21_map` is the data type stored in RBT. For `map`, it's `std::pair`:
-![[rbt_map_templ_param.png]]
+![rbt_map_templ_param.png](materials/rbt_map_templ_param.png)
 And for `s21_set`/`s21_multiset`, it's just a value:
-![[rbt_set_templt_param.png]]
+![rbt_set_templt_param.png](materials/rbt_set_templt_param.png)
 
 And knowing this, we should only get parent class know how to extract key from our nodes.
 
 ## Using lambda-functions to adjust base class methods
 
 Lambda-function:
-![[map_lambda.png]]
+![map_lambda.png](materials/map_lambda.png)
 `s21_map` functions insert a value into Red-Black Tree:
-![[map_inserts.png]]
+![map_inserts.png](materials/map_inserts.png)
 Lambda-function:
-![[set_lambda.png]]
+![set_lambda.png](materials/set_lambda.png)
 `s21_set` function inserts a value into Red-Black Tree:
-![[set_insert.png]]
+![set_insert.png](materials/set_insert.png)
 
 Thus, despite exclusive functions in some containers (e.g. `s21_multiset` has `count`) the common functions share the same behavior.
 
