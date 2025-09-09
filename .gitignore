@@ -51,5 +51,12 @@ Module.symvers
 Mkfile.old
 dkms.conf
 
+# MacOS Hidden Files
 .DS_Store
-*/.DS_Store
+
+# Coverage Files
+.gcno
+.gcda
+
+# Obsidian
+.obsidian/

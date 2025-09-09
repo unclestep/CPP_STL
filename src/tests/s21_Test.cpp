@@ -1,6 +1,3 @@
-//
-// Created by rasko on 30.03.2025.
-//
 #include "s21_test.h"
 
 int main(int argc, char **argv) {

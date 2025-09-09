@@ -7,7 +7,6 @@
 #include <utility>
 #include <vector>
 
-#include "../Vector/s21_vector.h"
 /* ####################### */
 /* # RED-BLACK TREE NODE # */
 /* ####################### */
